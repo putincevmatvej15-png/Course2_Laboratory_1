@@ -1,0 +1,25 @@
+{
+    "array": {
+        "arr1": [
+            "red"
+        ]
+    },
+    "doubly_list": {
+        "dlist1": []
+    },
+    "forward_list": {
+        "flist1": []
+    },
+    "queue": {
+        "queue1": [
+            "task2",
+            "task3"
+        ]
+    },
+    "stack": {
+        "stack1": [
+            "bottom",
+            "middle"
+        ]
+    }
+}
