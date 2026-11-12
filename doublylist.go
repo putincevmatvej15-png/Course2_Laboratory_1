@@ -81,6 +81,42 @@ func (l *DoublyList) InsertAfterAt(index int, val string) error {
 	return nil
 }
 
+func (l *DoublyList) InsertBeforeValue(target string, val string) {
+	cur := l.head
+	for cur != nil && cur.data != target {
+		cur = cur.next
+	}
+	if cur == nil {
+		return
+	}
+	if cur == l.head {
+		l.PushFront(val)
+		return
+	}
+	n := &dNode{data: val, prev: cur.prev, next: cur}
+	cur.prev.next = n
+	cur.prev = n
+	l.size++
+}
+
+func (l *DoublyList) InsertAfterValue(target string, val string) {
+	cur := l.head
+	for cur != nil && cur.data != target {
+		cur = cur.next
+	}
+	if cur == nil {
+		return
+	}
+	if cur == l.tail {
+		l.PushBack(val)
+		return
+	}
+	n := &dNode{data: val, prev: cur, next: cur.next}
+	cur.next.prev = n
+	cur.next = n
+	l.size++
+}
+
 func (l *DoublyList) PopFront() error {
 	if l.head == nil {
 		return errors.New("list is empty")
@@ -147,6 +183,61 @@ func (l *DoublyList) RemoveByValue(val string) {
 	}
 	cur.prev.next = cur.next
 	cur.next.prev = cur.prev
+	l.size--
+}
+
+func (l *DoublyList) RemoveAllByValue(val string) {
+	cur := l.head
+	for cur != nil {
+		next := cur.next
+		if cur.data == val {
+			if cur == l.head {
+				l.PopFront()
+			} else if cur == l.tail {
+				l.PopBack()
+			} else {
+				cur.prev.next = cur.next
+				cur.next.prev = cur.prev
+				l.size--
+			}
+		}
+		cur = next
+	}
+}
+
+func (l *DoublyList) RemoveBeforeValue(target string) {
+	cur := l.head
+	for cur != nil && cur.data != target {
+		cur = cur.next
+	}
+	if cur == nil || cur.prev == nil {
+		return
+	}
+	t := cur.prev
+	if t.prev != nil {
+		t.prev.next = cur
+	} else {
+		l.head = cur
+	}
+	cur.prev = t.prev
+	l.size--
+}
+
+func (l *DoublyList) RemoveAfterValue(target string) {
+	cur := l.head
+	for cur != nil && cur.data != target {
+		cur = cur.next
+	}
+	if cur == nil || cur.next == nil {
+		return
+	}
+	t := cur.next
+	if t.next != nil {
+		t.next.prev = cur
+	} else {
+		l.tail = cur
+	}
+	cur.next = t.next
 	l.size--
 }
 

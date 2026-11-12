@@ -67,6 +67,37 @@ func (l *ForwardList) InsertAfterAt(index int, val string) error {
 	return nil
 }
 
+func (l *ForwardList) InsertBeforeValue(target string, val string) {
+	if l.head == nil {
+		return
+	}
+	if l.head.data == target {
+		l.PushFront(val)
+		return
+	}
+	cur := l.head
+	for cur.next != nil && cur.next.data != target {
+		cur = cur.next
+	}
+	if cur.next != nil {
+		n := &fNode{data: val, next: cur.next}
+		cur.next = n
+		l.size++
+	}
+}
+
+func (l *ForwardList) InsertAfterValue(target string, val string) {
+	cur := l.head
+	for cur != nil && cur.data != target {
+		cur = cur.next
+	}
+	if cur != nil {
+		n := &fNode{data: val, next: cur.next}
+		cur.next = n
+		l.size++
+	}
+}
+
 func (l *ForwardList) PopFront() error {
 	if l.head == nil {
 		return errors.New("list is empty")
@@ -124,6 +155,53 @@ func (l *ForwardList) RemoveByValue(val string) {
 		cur = cur.next
 	}
 	if cur.next != nil {
+		cur.next = cur.next.next
+		l.size--
+	}
+}
+
+func (l *ForwardList) RemoveAllByValue(val string) {
+	for l.head != nil && l.head.data == val {
+		l.PopFront()
+	}
+	if l.head == nil {
+		return
+	}
+	cur := l.head
+	for cur.next != nil {
+		if cur.next.data == val {
+			cur.next = cur.next.next
+			l.size--
+		} else {
+			cur = cur.next
+		}
+	}
+}
+
+func (l *ForwardList) RemoveBeforeValue(target string) {
+	if l.head == nil || l.head.data == target {
+		return
+	}
+	if l.head.next != nil && l.head.next.data == target {
+		l.PopFront()
+		return
+	}
+	cur := l.head
+	for cur.next != nil && cur.next.next != nil && cur.next.next.data != target {
+		cur = cur.next
+	}
+	if cur.next != nil && cur.next.next != nil {
+		cur.next = cur.next.next
+		l.size--
+	}
+}
+
+func (l *ForwardList) RemoveAfterValue(target string) {
+	cur := l.head
+	for cur != nil && cur.data != target {
+		cur = cur.next
+	}
+	if cur != nil && cur.next != nil {
 		cur.next = cur.next.next
 		l.size--
 	}
